@@ -1,0 +1,9 @@
+{
+  "checks": [
+    "Bascule de thème et caméra rapprochée de la station",
+    "Changement de chapitre au défilement, caméra visible",
+    "Accueil et 3D aux largeurs 1 024, 768 et 390 px",
+    "Trois portraits locaux et associations vérifiés",
+    "Lecture du film rendu depuis l’animation originale du GLB"
+  ]
+}

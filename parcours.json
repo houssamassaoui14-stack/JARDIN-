@@ -1,0 +1,22 @@
+{
+  "url": "http://127.0.0.1:5173/",
+  "checks": [
+    "Accueil, logo et vrai GLB sous WebGL",
+    "Navigation des chapitres, composant et schéma",
+    "10 minutes à 2 L/min · 500 → 480 L",
+    "Arrêt manuel",
+    "Réservoir 1 000 L initialisé à 720 L et panneau à 70 Wc",
+    "Réserve critique · démarrage bloqué",
+    "Alerte pluie et protection",
+    "Création du programme et calendrier",
+    "ESP32 déconnecté",
+    "XLSX relu, sept feuilles et cycles inscrits",
+    "Assistant contextualisé",
+    "Équipe, portraits selon les autorisations et initiales",
+    "Mode jury et commande clavier",
+    "Navigation mobile et largeur de 13 écrans",
+    "Module météo accessible",
+    "Aucune exception JavaScript"
+  ],
+  "errors": []
+}

@@ -1,0 +1,33 @@
+import {galleryItems} from './gallery'
+import {useState} from 'react'
+import {MapPin,ArrowUpRight,BookOpen,Users,Mail,Phone,Link,Expand,ChevronRight,ChevronLeft} from 'lucide-react'
+import {media,Dialog} from './ui'
+type Member={name:string,initials:string,image?:string,role:string,missions:string[]}
+const team:Member[]=[
+ {name:'Houssam ASSAOUI',initials:'HA',image:'houssam.webp',role:'Informatique et architecture intelligente',missions:['Développement de la plateforme et du dashboard','Automatisation, calculs et visualisation des données','Intégration 3D et préparation de l’architecture ESP32']},
+ {name:'Hamza HAMRI',initials:'HH',image:'hamza.webp',role:'Fabrication et ressources matérielles',missions:['Choix et préparation du matériel','Fabrication et assemblage du prototype','Installation mécanique et vérification du montage']},
+ {name:'Mohamed Ali TAJRI',initials:'MAT',image:'mohamed-ali.webp',role:'Montage et intégration matérielle',missions:['Assemblage des composants','Raccordements mécaniques et hydrauliques','Vérifications du prototype']},
+ {name:'Wissal MALKI',initials:'WM',image:'wissal.webp',role:'Conception 3D et documentation',missions:['Conception du système sous SketchUp','Préparation des dessins et supports techniques','Rédaction du rapport et préparation de la présentation']}]
+const steps=['Identification du besoin','Étude du fonctionnement','Choix des composants','Conception SketchUp et Blender','Fabrication du prototype','Intégration solaire et hydraulique','Développement de la plateforme','Évolution vers un système IoT']
+const captions=galleryItems.map(x=>x.title)
+const images=galleryItems.map(x=>x.file)
+type Consent={photos?:string[],contacts?:Record<string,{email?:string,phone?:string,linkedin?:string}>}
+declare global{interface Window{FLOREOL_PUBLICATION?:Consent}}
+const permissions=()=>window.FLOREOL_PUBLICATION
+function Portrait({person}:{person:Member}){
+ const [failed,setFailed]=useState(false)
+ const name=person.image,allowed=permissions()?.photos?.includes(person.initials)??import.meta.env.DEV
+ return <div className="portrait">{name&&allowed&&!failed?<img src={media(name)} alt={person.name} onError={()=>setFailed(true)}/>:<div className="initials" aria-label={'Portrait à compléter pour '+person.name}>{person.initials}</div>}</div>
+}
+function Contacts({person}:{person:Member}){const p=permissions()?.contacts?.[person.initials];return <div className="contact-row">{([['Email',Mail,p?.email&&'mailto:'+p.email],['Téléphone',Phone,p?.phone&&'tel:'+p.phone],['LinkedIn',Link,p?.linkedin]] as const).map(([n,I,url])=>url&&/^(mailto:|tel:|https:\/\/([a-z]+\.)?linkedin\.com\/)/.test(url)?<a href={url} key={n} className="button outline"><I size={14}/>{n}</a>:<button disabled title="Coordonnée en attente d’autorisation" key={n}><I size={14}/>{n}</button>)}</div>}
+const tutor:Member={name:'Madame Hiba HDIDOU',image:'hiba.webp',initials:'HHd',role:'Encadrante pédagogique',missions:[]}
+export default function Project({team:showTeam}:{team:boolean}){
+ const [index,pick]=useState(0),[gallery,setGallery]=useState<number|null>(null);const p=team[index]
+ if(showTeam)return <section className="pagewrap"><div className="section-key"><Users size={16}/> IFMEREE Tanger</div><h1>L’équipe Floréol.</h1><p className="page-lead">Quatre étudiants réunissent leurs savoir-faire autour du même prototype.</p>
+ <div className="team-layout"><div className="roster">{team.map((m,i)=><button key={m.initials} aria-pressed={index===i} onClick={()=>pick(i)}><small>{m.initials}</small><strong>{m.name}</strong><ChevronRight size={17}/></button>)}</div><Portrait key={p.name} person={p}/><div className="bio"><h2>{p.name}</h2><h3>{p.role}</h3><ul>{p.missions.map(x=><li key={x}>{x}</li>)}</ul><Contacts person={p}/></div></div>
+ <div className="tutor"><Portrait person={tutor}/><div><div className="section-key">Encadrement pédagogique</div><h2>{tutor.name}</h2><h3>Module Installation des systèmes solaires</h3><p>Madame Hiba HDIDOU accompagne la démarche pédagogique et technique de l’équipe. Son encadrement relie les principes de l’installation photovoltaïque à leur mise en pratique sur le prototype.</p><Contacts person={tutor}/></div></div><p className="quiet">L’équipe remercie son encadrante et l’IFMEREE Tanger pour leur accompagnement.</p></section>
+ return <section className="pagewrap"><div className="section-key"><BookOpen size={16}/> Floréol Project</div><h1>Un jardin alimenté<br/>par le soleil.</h1><p className="page-lead">À l’IFMEREE Tanger, nous étudions comment adapter l’arrosage aux ressources disponibles en eau et en énergie.</p><button className="project-image" aria-label="Agrandir le rendu Blender du jardin" onClick={()=>setGallery(0)}><img src={media(images[0])} alt="Jardin et implantation de l’installation dans Blender"/><span><Expand size={17}/> Voir la galerie</span></button>
+ <div className="editorial-grid"><h2>De l’idée à l’installation.</h2><div><h3>Le problème étudié</h3><p>Un cycle mal adapté peut utiliser plus d’eau que le jardin n’en a besoin. Une alimentation photovoltaïque ajoute une contrainte concrète, celle de la disponibilité de la lumière.</p><h3>Le prototype réalisé</h3><p>Un panneau, un réservoir, une pompe DC, un boîtier de commande et un arroseur sphérique composent le système. Le modèle 3D permet d’inspecter leurs raccordements.</p><h3>Ce que démontre la plateforme</h3><p>Le simulateur suit les volumes, estime la production et programme des cycles. La pose des capteurs, la validation électrique et la liaison sécurisée de l’ESP32 constituent la prochaine étape.</p></div></div>
+ <h2>Les étapes du projet</h2><ol className="timeline">{steps.map((v,i)=><li key={v}><span>{String(i+1).padStart(2,'0')}</span>{v}{i===7&&<small>À venir</small>}</li>)}</ol><div className="button-row"><a className="button solid" href="#equipe"><Users size={16}/> Rencontrer l’équipe</a><a className="button outline" href="#systeme">Explorer le prototype</a></div>
+ {gallery!==null&&<Dialog title={captions[gallery]} close={()=>setGallery(null)}>{galleryItems[gallery].kind==="video"?<video className="gallery-img" controls src={media(images[gallery])} aria-label={captions[gallery]}/>:<img className="gallery-img" src={media(images[gallery])} alt={captions[gallery]}/>}<div className="button-row"><button className="button outline" onClick={()=>setGallery((gallery+images.length-1)%images.length)}><ChevronLeft size={16}/> Précédent</button><button className="button outline" onClick={()=>setGallery((gallery+1)%images.length)}>Suivant <ChevronRight size={16}/></button></div></Dialog>}</section>
+}

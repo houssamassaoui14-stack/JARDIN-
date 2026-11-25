@@ -1,0 +1,11 @@
+{
+  "checks": [
+    "Installation du cache de production sous un sous-chemin de dépôt",
+    "Recharge sans réseau, vrai GLB et animation",
+    "API en panne, message explicite et retour à la prévision simulée",
+    "Génération du classeur Excel hors ligne",
+    "Assistant local hors ligne, autonomie calculée",
+    "Poster et schéma accessibles en cas d’absence de WebGL"
+  ],
+  "errors": []
+}

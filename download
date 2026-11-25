@@ -1,0 +1,3 @@
+.pio/
+include/local.h
+include/board_private.h
